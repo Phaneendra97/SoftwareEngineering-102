@@ -39,7 +39,11 @@ function SignIn() {
       password: password,
     };
 
-    if (validateEmail(email)) {
+    if(!validatePassword(password)){
+      setMessageType("error");
+      setMessage("Password should be atleast 8 characters long");
+    }
+    else if (validateEmail(email)) {
       fetch("http://localhost:3000/auth/sign_in", {
         method: "POST",
         headers: {
@@ -68,7 +72,7 @@ function SignIn() {
         });
     } else {
       setMessageType("error");
-      setMessage("Invalid email");
+      setMessage("Invalid email, use your SCU email");
     }
   };
 
@@ -77,8 +81,11 @@ function SignIn() {
       email: email,
       password: password,
     };
-
-    if (validateEmail(email)) {
+    if(!validatePassword(password)){
+      setMessageType("error");
+      setMessage("Password should be atleast 8 characters long");
+    }
+    else if (validateEmail(email)) {
       fetch("http://localhost:3000/auth/register", {
         method: "POST",
         headers: {
@@ -104,13 +111,21 @@ function SignIn() {
         });
     } else {
       setMessageType("error");
-      setMessage("Invalid email");
+      setMessage("Invalid email, use your SCU email");
     }
   };
 
   const validateEmail = (email: string) => {
-    const re = /\S+@\S+\.\S+/;
+    const re = /\S+@scu.edu/;
     return re.test(email);
+  };
+
+  const validatePassword = (password: string) => {
+    if(password.length < 8){
+      return false;
+    }else{
+      return true;
+    }
   };
 
   return (
