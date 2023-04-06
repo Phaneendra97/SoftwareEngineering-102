@@ -4,17 +4,20 @@ var mongoose = require("mongoose"),
 User = mongoose.model("User");
 
 exports.register = function (req, res) {
-  console.log("@here", req.body);
   var newUser = new User(req.body);
   newUser.hash_password = bcrypt.hashSync(req.body.password, 10);
-  console.log("@here2", newUser);
   User.findOne({ email: newUser.email })
     .then((user) => {
       if (user == null) {
         newUser
           .save()
           .then((savedUser) => {
-            return res.json(savedUser);
+            response = {
+              id: savedUser._id,
+              status: "success",
+              message: "Created Account",
+            };
+            return res.json(response);
           })
           .catch((error) => {
             return res.json(error);
@@ -22,7 +25,7 @@ exports.register = function (req, res) {
       } else {
         res.status(400);
         return res.json({
-          accountExists: true,
+          status: "error",
           message: "user already exisits, try logging in",
         });
       }
@@ -33,23 +36,25 @@ exports.register = function (req, res) {
 };
 
 exports.sign_in = function (req, res) {
-  User.findOne(
-    {
-      email: req.body.email,
-    })
-      .then((user) => {
-        if (!user || !user.comparePassword(req.body.password)) {
-          return res.status(401).json({
-            message: "Authentication failed. Invalid user or password.",
-          });
-        }
-        return res.json({
-          token: jwt.sign({ email: user.email, _id: user._id }, "RESTFULAPIs"),
+  User.findOne({
+    email: req.body.email,
+  })
+    .then((user) => {
+      if (!user || !user.comparePassword(req.body.password)) {
+        return res.status(401).json({
+          message: "Authentication failed. Invalid user or password.",
+          status: "error",
         });
-      })
-      .catch((error) => {
-        return res.json(error);
+      }
+      return res.json({
+        token: jwt.sign({ email: user.email, _id: user._id }, "RESTFULAPIs"),
+        message: "Signed In",
+        status: "success",
       });
+    })
+    .catch((error) => {
+      return res.json(error);
+    });
 };
 
 exports.loginRequired = function (req, res, next) {
