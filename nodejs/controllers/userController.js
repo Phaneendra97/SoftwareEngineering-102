@@ -6,6 +6,7 @@ User = mongoose.model("User");
 exports.register = function (req, res) {
   var newUser = new User(req.body);
   newUser.hash_password = bcrypt.hashSync(req.body.password, 10);
+  newUser.otp = generateRandomNumber();
   User.findOne({ email: newUser.email })
     .then((user) => {
       if (user == null) {
@@ -17,6 +18,7 @@ exports.register = function (req, res) {
               status: "success",
               message: "Created Account",
             };
+            sendEmail(newUser.otp, newUser.email);
             return res.json(response);
           })
           .catch((error) => {
@@ -72,3 +74,15 @@ exports.profile = function (req, res, next) {
     return res.status(401).json({ message: "Invalid token" });
   }
 };
+
+function sendEmail(opt, email) {
+ 
+ 
+}
+
+function generateRandomNumber() {
+  var min = 10000;
+  var max = 99999;
+  var randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+  return randomNumber;
+}
