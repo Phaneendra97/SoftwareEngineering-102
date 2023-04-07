@@ -157,7 +157,7 @@ function SignIn() {
           )}
           <TextField
             id="email"
-            label="email"
+            label="SCU email"
             variant="outlined"
             type="text"
             value={email}
