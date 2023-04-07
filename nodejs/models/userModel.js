@@ -1,5 +1,5 @@
-var mongoose = require('mongoose'),
-  bcrypt = require('bcrypt'),
+var mongoose = require("mongoose"),
+  bcrypt = require("bcrypt"),
   Schema = mongoose.Schema;
 
 /**
@@ -11,19 +11,26 @@ var UserSchema = new Schema({
     unique: true,
     lowercase: true,
     trim: true,
-    required: true
+    required: true,
   },
   hash_password: {
-    type: String
+    type: String,
+  },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  otp: {
+    type: String,
   },
   created: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
-UserSchema.methods.comparePassword = function(password) {
+UserSchema.methods.comparePassword = function (password) {
   return bcrypt.compareSync(password, this.hash_password);
 };
 
-mongoose.model('User', UserSchema);
+mongoose.model("User", UserSchema);
