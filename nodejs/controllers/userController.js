@@ -3,6 +3,12 @@ var mongoose = require("mongoose"),
   bcrypt = require("bcrypt");
 User = mongoose.model("User");
 
+const Mailjet = require('node-mailjet');
+const mailjet = Mailjet.apiConnect(
+  'a961fc3b933e87ab30b045e24194c679',
+  'ad68c759265f128846bfa9ed3754ad57',
+);
+
 exports.register = function (req, res) {
   var newUser = new User(req.body);
   newUser.hash_password = bcrypt.hashSync(req.body.password, 10);
@@ -75,9 +81,36 @@ exports.profile = function (req, res, next) {
   }
 };
 
-function sendEmail(opt, email) {
- 
- 
+function sendEmail(otp, email) {
+  console.log('@here');
+  const request = mailjet.post("send", { version: "v3.1" }).request({
+    Messages: [
+      {
+        From: {
+          Email: "phaneendra0897@gmail.com",
+          Name: "Rate My Course",
+        },
+        To: [
+          {
+            Email: email,
+            Name: email,
+          },
+        ],
+        Subject: "Greetings from Rate My Course.",
+        TextPart: "Rate My Course confirmation email",
+        HTMLPart:
+          "Link to verify: http://localhost:3000/auth/verify?email="+email+"&otp="+otp,
+        CustomID: "Verify",
+      },
+    ],
+  });
+  request
+    .then((result) => {
+      console.log(result.body);
+    })
+    .catch((err) => {
+      console.log(err.statusCode);
+    });
 }
 
 function generateRandomNumber() {
