@@ -22,7 +22,8 @@ app.use(function (req, res, next) {
 });
 
 const mongoURI = process.env.MONGODB_URI;
-mongoose.connect("mongodb://localhost:27017/se102", option).then(
+//if it's container use mongodb://host.docker.internal:27017/se102
+mongoose.connect("mongodb://host.docker.internal:27017/se102", option).then(
   function () {
     console.log("connected successfully to DB");
     //connected successfully
