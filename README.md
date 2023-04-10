@@ -1,4 +1,4 @@
-### SoftwareEngineering-102
+# SoftwareEngineering-102
 Software Engineering (285) - Group 102
 
 
@@ -20,7 +20,7 @@ Software Engineering (285) - Group 102
     - our server file is index.js - to start run the command "node index.js" from terminal
     for running after first time
     - go to the nodejs folder and run the command the command "node index.js" from terminal
-# Note: The mongo needs to be up and running before starting backend - once you run backend if the db is running you'll see a success message like " RESTful API server started on: 3000 connected successfully to DB"    
+### Note: The mongo needs to be up and running before starting backend - once you run backend if the db is running you'll see a success message like " RESTful API server started on: 3000 connected successfully to DB"    
 
 ## how to run mongo
 - Installation https://www.mongodb.com/docs/manual/administration/install-community/
