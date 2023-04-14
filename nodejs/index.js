@@ -2,6 +2,7 @@ var express = require("express"),
   app = express(),
   port = process.env.PORT || 3000,
   User = require("./models/userModel"),
+  CourseList = require("./models/courseList"),
   bodyParser = require("body-parser"),
   jsonwebtoken = require("jsonwebtoken");
 const mongoose = require("mongoose");
