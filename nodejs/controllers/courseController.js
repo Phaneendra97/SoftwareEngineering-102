@@ -3,7 +3,7 @@ var mongoose = require("mongoose"),
   bcrypt = require("bcrypt");
 courseList = mongoose.model("course_list");
 
-exports.get_courses = function (req, res) {
+exports.get_course_list = function (req, res) {
   if (req.user) {
     courseList
       .find()
@@ -14,6 +14,36 @@ exports.get_courses = function (req, res) {
           });
           response = {
             courseList: deptList,
+            status: "success",
+          };
+          return res.json(response);
+        } else {
+          res.status(500);
+          return res.json({
+            status: "error",
+            message: "no records exist",
+          });
+        }
+      })
+      .catch((error) => {
+        return res.json(error);
+      });
+  } else {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized user!!", status: "error" });
+  }
+};
+
+exports.get_course_list_by_dept = function (req, res) {
+  if (req.user) {
+    const { dept } = req.query;
+    courseList
+      .find({ dept: dept  })
+      .then((courses) => {
+        if (courses != null) {
+          response = {
+            courseList: courses,
             status: "success",
           };
           return res.json(response);

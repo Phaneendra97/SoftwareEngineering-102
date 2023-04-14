@@ -9,7 +9,6 @@ var CourseListSchema = new Schema({
   dept: {
     type: String,
     unique: true,
-    lowercase: true,
     trim: true,
     required: true,
   },

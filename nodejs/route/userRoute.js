@@ -7,6 +7,8 @@ module.exports = function (app) {
   app.route("/auth/register").post(userHandlers.register);
   app.route("/auth/sign_in").post(userHandlers.sign_in);
   app.route("/auth/verify").get(userHandlers.verify_otp);
-  app.route("/courses").get(courseController.get_courses);
+  app.route("/course_list").get(courseController.get_course_list);
+  app.route("/course_list_by_dept").get(courseController.get_course_list_by_dept);
+
 
 };
