@@ -1,15 +1,8 @@
+#DockerFile for Node Server
 FROM node
-
 WORKDIR /app
-
 COPY package.json .
-
 RUN npm install
-
-RUN npm i
-
 COPY . .
-
-EXPOSE 8080
-
+EXPOSE 3000
 CMD ["node","index.js"]
