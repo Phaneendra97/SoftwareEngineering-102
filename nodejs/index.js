@@ -4,6 +4,7 @@ var express = require("express"),
   User = require("./models/userModel"),
   CourseList = require("./models/courseModel"),
   DeptList = require("./models/deptModel"),
+  Review = require("./models/reviewModel"),
   bodyParser = require("body-parser"),
   jsonwebtoken = require("jsonwebtoken");
 const mongoose = require("mongoose");

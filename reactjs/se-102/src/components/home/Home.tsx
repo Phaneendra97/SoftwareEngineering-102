@@ -69,6 +69,7 @@ function Home() {
     const dept = event.target.value;
     selectedDept = dept + "";
     setSelectedDeptForForm(selectedDept);
+    setselectedCourseForForm("");
     let authorization = localStorage.getItem("Authorization");
     if (!authorization) {
       navigate("/sign-in");
@@ -110,7 +111,9 @@ function Home() {
   };
 
   const searchReview = () => {
-    console.log('course', selectedCourseForForm, selectedDeptForForm);
+    navigate("/course", {
+      state: { dept: selectedDeptForForm, coursecode: selectedCourseForForm },
+    });
   };
 
   const logout = () => {

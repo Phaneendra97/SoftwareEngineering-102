@@ -6,6 +6,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import Home from "./components/home/Home";
 import CircularProgress from "@mui/material/CircularProgress";
 import SignIn from "./components/signin/SignIn";
+import Review from "./components/review/Review";
 
 function App() {
   const navigate = useNavigate();
@@ -54,7 +55,7 @@ function App() {
             <Route
               path="/"
               element={
-                <Box sx={{width:"100vw"}}>
+                <Box sx={{ width: "100vw" }}>
                   <Home></Home>
                 </Box>
               }
@@ -64,6 +65,14 @@ function App() {
               element={
                 <Box sx={{ flexGrow: 1 }}>
                   <SignIn></SignIn>
+                </Box>
+              }
+            />
+            <Route
+              path="/course"
+              element={
+                <Box sx={{ flexGrow: 1 }}>
+                  <Review></Review>
                 </Box>
               }
             />
