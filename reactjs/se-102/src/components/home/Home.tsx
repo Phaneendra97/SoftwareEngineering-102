@@ -14,6 +14,7 @@ import Box from "@mui/material/Box";
 
 function Home() {
   const navigate = useNavigate();
+  let loading = true;
   const [availableDept, setAvailableDept] = useState([]);
   const [availableCourse, setAvailableCourse] = useState([]);
   let selectedDept = "";
@@ -25,6 +26,7 @@ function Home() {
   useEffect(() => {
     let authorization = localStorage.getItem("Authorization");
     if (!authorization) {
+      loading = false;
       navigate("/sign-in");
     } else {
       fetch("http://localhost:3000/dept_list", {
@@ -36,6 +38,7 @@ function Home() {
       })
         .then((response) => response.json())
         .then((data) => {
+          loading = false;
           // do something with the data
           if (data.status == "success") {
             setAvailableDept(data.deptList);
@@ -106,6 +109,12 @@ function Home() {
     setselectedCourseForForm(selectedCourse);
   };
 
+  const logout = () => {
+    localStorage.removeItem("Authorization");
+    navigate("/sign-in");
+    setselectedCourseForForm(selectedCourse);
+  };
+
   return (
     <Box
       id="container"
@@ -131,7 +140,7 @@ function Home() {
         <Typography variant="h4" color="initial">
           Rate My Course @SCU
         </Typography>
-        <Button variant="contained" color="primary">
+        <Button variant="contained" color="primary" onClick={logout}>
           logout
         </Button>
       </Box>
