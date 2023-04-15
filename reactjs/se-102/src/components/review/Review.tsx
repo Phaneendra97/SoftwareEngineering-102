@@ -30,7 +30,7 @@ function Review() {
         navigate("/sign-in");
       } else {
         fetch(
-          "localhost:3000/review/?dept=" +
+          "http://localhost:3000/review/?dept=" +
             dept +
             "&" +
             "coursecode=" +
@@ -46,6 +46,7 @@ function Review() {
           .then((response) => response.json())
           .then((data) => {
             if (data.status == "success") {
+              console.log(data.reviews);
               // setMessageType("success");
             } else if (data.status == "error") {
               // setMessageType("error");
