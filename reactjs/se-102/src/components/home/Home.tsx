@@ -2,15 +2,15 @@ import { SetStateAction, useEffect, useState } from "react";
 import "./Home.css";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Card from "@mui/material/Card";
-import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useNavigate } from "react-router-dom";
+import Fab from "@mui/material/Fab";
 import Box from "@mui/material/Box";
+import NavigateNextTwoToneIcon from "@mui/icons-material/NavigateNextTwoTone";
 
 function Home() {
   const navigate = useNavigate();
@@ -109,6 +109,10 @@ function Home() {
     setselectedCourseForForm(selectedCourse);
   };
 
+  const searchReview = () => {
+    console.log('course', selectedCourseForForm, selectedDeptForForm);
+  };
+
   const logout = () => {
     localStorage.removeItem("Authorization");
     navigate("/sign-in");
@@ -120,7 +124,7 @@ function Home() {
       id="container"
       sx={{
         width: "100vw",
-        height: "100vh",
+        height: "90vh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -146,7 +150,7 @@ function Home() {
       </Box>
       <Container
         sx={{
-          height: "90vh",
+          height: "80vh",
           display: "flex",
           alignItems: "center",
           flexDirection: "column",
@@ -212,6 +216,11 @@ function Home() {
             </Select>
           </FormControl>
         </Container>
+        {selectedCourseForForm != "" && (
+          <Fab onClick={searchReview} color="primary" aria-label="add">
+            <NavigateNextTwoToneIcon />
+          </Fab>
+        )}
       </Container>
     </Box>
   );
