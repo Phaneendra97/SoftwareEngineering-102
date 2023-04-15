@@ -48,13 +48,10 @@ function Home() {
     }
   }, []);
 
-
   const handleDeptChange = (event: {
     target: { value: SetStateAction<string> };
   }) => {
-    //TODO
     setSelectedDept(event.target.value);
-    console.log(event.target.value);
   };
 
   return (
@@ -119,7 +116,5 @@ function Home() {
     </Box>
   );
 }
-
-
 
 export default Home;
