@@ -15,7 +15,10 @@ import Box from "@mui/material/Box";
 function Home() {
   const navigate = useNavigate();
   const [availableDept, setAvailableDept] = useState([]);
+  const [availableCourse, setAvailableCourse] = useState([]);
   const [selectedDept, setSelectedDept] = useState("");
+  const [selectedCourse, setSelectedCourse] = useState("");
+  // const [deptSelected, setDeptSelected] = useState(false);
   useEffect(() => {
     let authorization = localStorage.getItem("Authorization");
     if (!authorization) {
@@ -51,7 +54,49 @@ function Home() {
   const handleDeptChange = (event: {
     target: { value: SetStateAction<string> };
   }) => {
-    setSelectedDept(event.target.value);
+    const dept = event.target.value;
+    setSelectedDept(dept);
+    console.log("@here", dept);
+    console.log("@here", selectedDept);
+    let authorization = localStorage.getItem("Authorization");
+    if (!authorization) {
+      navigate("/sign-in");
+    } else {
+      fetch("http://localhost:3000/course_list_by_dept/?dept=" + selectedDept, {
+        method: "GET",
+
+        headers: {
+          Authorization: authorization,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // do something with the data
+          if (data.status == "success") {
+            // setDeptSelected(true);
+            console.log("@here", data.courseList);
+            setAvailableCourse(data.courseList);
+            console.log("@here", availableCourse);
+            // setMessageType("success");
+          } else if (data.status == "error") {
+            // setMessageType("error");
+          }
+          // setMessage(data.message);
+        })
+        .catch((error) => {
+          // handle the error
+          console.error(error);
+          // setMessageType("error");
+          // setMessage(error);
+        });
+    }
+  };
+
+  const handleCourseChange = (event: {
+    target: { value: SetStateAction<string> };
+  }) => {
+    setSelectedCourse(event.target.value);
   };
 
   return (
@@ -93,25 +138,64 @@ function Home() {
           justifyContent: "center",
         }}
       >
-        <Typography variant="h2" color="initial">
-          Select a Department
-        </Typography>
-        <FormControl fullWidth>
-          <InputLabel id="Select a Department">Department</InputLabel>
-          <Select
-            labelId="department"
-            id="department"
-            value={selectedDept}
-            label="Department"
-            onChange={handleDeptChange}
-          >
-            {availableDept.map((dept, index) => (
-              <MenuItem key={index} value={dept["dept_code"]}>
-                {dept["dept_code"]}: {dept["dept_name"]}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Container
+          maxWidth="lg"
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+        >
+          <Typography variant="h2" color="initial">
+            Select a Department
+          </Typography>
+          <FormControl fullWidth>
+            <InputLabel id="Select a Department">Department</InputLabel>
+            <Select
+              labelId="department"
+              id="department"
+              value={selectedDept}
+              label="Department"
+              onChange={handleDeptChange}
+            >
+              {availableDept.map((dept, index) => (
+                <MenuItem key={index} value={dept["dept_code"]}>
+                  {dept["dept_code"]}: {dept["dept_name"]}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Container>
+        <Container
+          maxWidth="lg"
+          sx={{
+            alignItems: "center",
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+          }}
+        >
+          <Typography variant="h2" color="initial">
+            Select a Course
+          </Typography>
+          <FormControl fullWidth>
+            <InputLabel id="Select a Course">Course</InputLabel>
+            <Select
+              labelId="course"
+              id="course"
+              value={selectedCourse}
+              label="Course"
+              onChange={handleCourseChange}
+            >
+              {availableCourse.map((course, index) => (
+                <MenuItem key={index} value={course["course_code"]}>
+                  {course["course_code"]}: {course["course_name"]}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Container>
       </Container>
     </Box>
   );
