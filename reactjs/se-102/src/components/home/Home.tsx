@@ -16,8 +16,11 @@ function Home() {
   const navigate = useNavigate();
   const [availableDept, setAvailableDept] = useState([]);
   const [availableCourse, setAvailableCourse] = useState([]);
-  const [selectedDept, setSelectedDept] = useState("");
-  const [selectedCourse, setSelectedCourse] = useState("");
+  let selectedDept = "";
+  let selectedCourse = "";
+  const [selectedDeptForForm, setSelectedDeptForForm] = useState("");
+  const [selectedCourseForForm, setselectedCourseForForm] = useState("");
+
   // const [deptSelected, setDeptSelected] = useState(false);
   useEffect(() => {
     let authorization = localStorage.getItem("Authorization");
@@ -51,13 +54,18 @@ function Home() {
     }
   }, []);
 
+  // useEffect(() => {
+  //   console.log("@here");
+  //   setSelectedDeptForForm(selectedDept);
+  //   console.log(selectedDeptForForm);
+  // }, [selectedDept]);
+
   const handleDeptChange = (event: {
     target: { value: SetStateAction<string> };
   }) => {
     const dept = event.target.value;
-    setSelectedDept(dept);
-    console.log("@here", dept);
-    console.log("@here", selectedDept);
+    selectedDept = dept + "";
+    setSelectedDeptForForm(selectedDept);
     let authorization = localStorage.getItem("Authorization");
     if (!authorization) {
       navigate("/sign-in");
@@ -75,9 +83,7 @@ function Home() {
           // do something with the data
           if (data.status == "success") {
             // setDeptSelected(true);
-            console.log("@here", data.courseList);
             setAvailableCourse(data.courseList);
-            console.log("@here", availableCourse);
             // setMessageType("success");
           } else if (data.status == "error") {
             // setMessageType("error");
@@ -96,7 +102,8 @@ function Home() {
   const handleCourseChange = (event: {
     target: { value: SetStateAction<string> };
   }) => {
-    setSelectedCourse(event.target.value);
+    selectedCourse = event.target.value + "";
+    setselectedCourseForForm(selectedCourse);
   };
 
   return (
@@ -155,7 +162,7 @@ function Home() {
             <Select
               labelId="department"
               id="department"
-              value={selectedDept}
+              value={selectedDeptForForm}
               label="Department"
               onChange={handleDeptChange}
             >
@@ -184,7 +191,7 @@ function Home() {
             <Select
               labelId="course"
               id="course"
-              value={selectedCourse}
+              value={selectedCourseForForm}
               label="Course"
               onChange={handleCourseChange}
             >
