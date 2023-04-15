@@ -54,7 +54,7 @@ function App() {
             <Route
               path="/"
               element={
-                <Box sx={{ flexGrow: 1 }}>
+                <Box sx={{width:"100vw"}}>
                   <Home></Home>
                 </Box>
               }
