@@ -16,11 +16,12 @@ import { CardHeader, Chip, CircularProgress, TextField } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 import CardContent from "@mui/material/CardContent";
 import { saveAs } from "file-saver";
-import ReviewsOutlinedIcon from '@mui/icons-material/ReviewsOutlined';
+import ReviewsOutlinedIcon from "@mui/icons-material/ReviewsOutlined";
 
 function Review() {
   let [deptCode, setDeptCode] = useState("");
   let [courseCode, setCourseCode] = useState("");
+  let [userId, setUserID] = useState("");
   let array: any[] = [];
   let [reviewArray, setReviewArray] = useState(array);
   const { state } = useLocation();
@@ -37,36 +38,55 @@ function Review() {
       if (!authorization) {
         navigate("/sign-in");
       } else {
-        fetch(
-          "http://localhost:3000/review/?dept=" +
-            dept +
-            "&" +
-            "coursecode=" +
-            coursecode,
-          {
-            method: "GET",
-            headers: {
-              Authorization: authorization,
-              "Content-Type": "application/json",
-            },
-          }
-        )
+        fetch("http://localhost:3000/profile", {
+          method: "POST",
+          headers: {
+            Authorization: authorization,
+            "Content-Type": "application/json",
+          },
+        })
           .then((response) => response.json())
           .then((data) => {
-            if (data.status == "success") {
-              setReviewArray(data.reviews);
-              setLoading(false);
-              // setMessageType("success");
-            } else if (data.status == "error") {
-              // setMessageType("error");
+            setUserID(data["_id"]);
+            if (!authorization) {
+              navigate("/sign-in");
+            } else {
+              fetch(
+                "http://localhost:3000/review/?dept=" +
+                  dept +
+                  "&" +
+                  "coursecode=" +
+                  coursecode,
+                {
+                  method: "GET",
+                  headers: {
+                    Authorization: authorization,
+                    "Content-Type": "application/json",
+                  },
+                }
+              )
+                .then((response) => response.json())
+                .then((data) => {
+                  if (data.status == "success") {
+                    setReviewArray(data.reviews);
+                    setLoading(false);
+                    // setMessageType("success");
+                  } else if (data.status == "error") {
+                    // setMessageType("error");
+                  }
+                  // setMessage(data.message);
+                })
+                .catch((error) => {
+                  // handle the error
+                  console.error(error);
+                  // setMessageType("error");
+                  // setMessage(error);
+                });
             }
-            // setMessage(data.message);
           })
           .catch((error) => {
             // handle the error
             console.error(error);
-            // setMessageType("error");
-            // setMessage(error);
           });
       }
     }
@@ -78,7 +98,6 @@ function Review() {
   };
 
   const downloadSyllabus = (syllabus: any) => {
-    console.log("@here", syllabus);
     const binaryString = atob(syllabus.data);
     const byteArray = new Uint8Array(binaryString.length);
     for (let i = 0; i < binaryString.length; i++) {
@@ -86,6 +105,10 @@ function Review() {
     }
     const blob = new Blob([byteArray], { type: syllabus.fileType });
     saveAs(blob, syllabus.fileName);
+  };
+
+  const writeAReview = (instructor: String) => {
+    console.log("@here", instructor, userId);
   };
 
   return (
@@ -247,7 +270,7 @@ function Review() {
                                 </Card>
                               )
                             )}
-                            <Box sx={{ display: "flex", gap:"20px" }}>
+                            <Box sx={{ display: "flex", gap: "20px" }}>
                               <Box
                                 sx={{
                                   paddingTop: "20px",
@@ -257,7 +280,7 @@ function Review() {
                               >
                                 <Button
                                   onClick={() => {
-                                    downloadSyllabus(review.syllabus);
+                                    writeAReview(review["instructor"]);
                                   }}
                                   endIcon={<ReviewsOutlinedIcon />}
                                   size="small"
