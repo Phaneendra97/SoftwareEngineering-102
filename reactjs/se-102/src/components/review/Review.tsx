@@ -16,6 +16,7 @@ import { CardHeader, Chip, CircularProgress, TextField } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 import CardContent from "@mui/material/CardContent";
 import { saveAs } from "file-saver";
+import ReviewsOutlinedIcon from '@mui/icons-material/ReviewsOutlined';
 
 function Review() {
   let [deptCode, setDeptCode] = useState("");
@@ -248,41 +249,73 @@ function Review() {
                                 </Card>
                               )
                             )}
-                            {review.syllabus !== null && (
-                              <Box sx={{ paddingTop: "20px" }}>
+                            <Box sx={{ display: "flex", gap:"20px" }}>
+                              <Box
+                                sx={{
+                                  paddingTop: "20px",
+                                  display: "flex",
+                                  gap: "20px",
+                                }}
+                              >
                                 <Button
                                   onClick={() => {
                                     downloadSyllabus(review.syllabus);
                                   }}
-                                  endIcon={<DownloadIcon />}
+                                  endIcon={<ReviewsOutlinedIcon />}
                                   size="small"
                                   variant="contained"
                                   color="primary"
                                 >
-                                  Download Syllabus
+                                  Write a Review
                                 </Button>
                               </Box>
-                            )}
-                            {review.syllabus === null && (
-                              <Box sx={{ paddingTop: "20px" }}>
-                                <Card sx={{ padding: "5px", border: '2px solid #1976D2'  }}>
-                                  <Typography
-                                    variant="subtitle1"
-                                    color="initial"
+                              {review.syllabus !== null && (
+                                <Box
+                                  sx={{
+                                    paddingTop: "20px",
+                                    display: "flex",
+                                    gap: "20px",
+                                  }}
+                                >
+                                  <Button
+                                    onClick={() => {
+                                      downloadSyllabus(review.syllabus);
+                                    }}
+                                    endIcon={<DownloadIcon />}
+                                    size="small"
+                                    variant="contained"
+                                    color="primary"
                                   >
-                                    Have a copy of this syllabus? help us add it
-                                    here! email us at{" "}
-                                    <a
-                                      style={{ color: "#000000" }}
-                                      href="mailto:pamruthurravi@scu.edu"
+                                    Download Syllabus
+                                  </Button>
+                                </Box>
+                              )}
+                              {review.syllabus === null && (
+                                <Box sx={{ paddingTop: "20px" }}>
+                                  <Card
+                                    sx={{
+                                      padding: "5px",
+                                      border: "2px solid #1976D2",
+                                    }}
+                                  >
+                                    <Typography
+                                      variant="subtitle1"
+                                      color="initial"
                                     >
-                                      pamruthurravi@scu.edu
-                                    </a>
-                                    &nbsp;
-                                  </Typography>
-                                </Card>
-                              </Box>
-                            )}
+                                      Have a copy of this syllabus? help us add
+                                      it here! email us at{" "}
+                                      <a
+                                        style={{ color: "#000000" }}
+                                        href="mailto:pamruthurravi@scu.edu"
+                                      >
+                                        pamruthurravi@scu.edu
+                                      </a>
+                                      &nbsp;
+                                    </Typography>
+                                  </Card>
+                                </Box>
+                              )}
+                            </Box>
                           </Container>
                         </Container>
                       </CardContent>
