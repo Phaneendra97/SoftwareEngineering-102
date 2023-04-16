@@ -13,5 +13,5 @@ module.exports = function (app) {
     .route("/course_list_by_dept")
     .get(courseController.get_course_list_by_dept);
   app.route("/review").get(reviewController.get_review);
-  app.route("/check_review_exists").get(reviewController.check_review_exists);
+  app.route("/check_review_exists").post(reviewController.check_review_exists);
 };

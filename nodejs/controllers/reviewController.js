@@ -34,10 +34,10 @@ exports.get_review = function (req, res) {
 };
 
 exports.check_review_exists = function (req, res) {
-  const { instructor, dept, course } = req.query;
+  const reqPayload = req.body;
   if (req.user) {
     review
-      .findOne({ dept: dept, code: course, instructor: instructor })
+      .findOne({ dept: reqPayload.dept, code: reqPayload.course, instructor: reqPayload.instructor })
       .then((reviewObject) => {
         let payload = {
           courseName: reviewObject.courseName,

@@ -21,7 +21,6 @@ import ReviewsOutlinedIcon from "@mui/icons-material/ReviewsOutlined";
 function Review() {
   let [deptCode, setDeptCode] = useState("");
   let [courseCode, setCourseCode] = useState("");
-  let [userId, setUserID] = useState("");
   let array: any[] = [];
   let [reviewArray, setReviewArray] = useState(array);
   const { state } = useLocation();
@@ -29,6 +28,7 @@ function Review() {
   let [loading, setLoading] = useState(true);
   useEffect(() => {
     if (state == null) {
+      console.log('@here');
       navigate("/");
     } else {
       const { dept, coursecode } = state;
@@ -47,7 +47,6 @@ function Review() {
         })
           .then((response) => response.json())
           .then((data) => {
-            setUserID(data["_id"]);
             if (!authorization) {
               navigate("/sign-in");
             } else {
@@ -108,9 +107,9 @@ function Review() {
   };
 
   const writeAReview = (instructor: String) => {
-    console.log("@here", instructor, userId);
+    console.log("@here", instructor);
     navigate("/write-review", {
-      state: { instructor: instructor, userId: userId, dept: deptCode, course: courseCode},
+      state: { instructor: instructor, dept: deptCode, course: courseCode},
     });
   };
 
