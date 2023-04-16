@@ -45,7 +45,7 @@ function App() {
   return (
     <div className="App">
       <Box
-        sx={{ display: "flex", width: "100vw" }}
+        sx={{ display: "flex", flexGrow: 1 }}
         justifyContent={"center"}
         alignContent={"center"}
       >

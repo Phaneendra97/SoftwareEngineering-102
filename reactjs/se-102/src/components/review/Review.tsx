@@ -93,7 +93,6 @@ function Review() {
       id="container"
       sx={{
         paddingTop: "2%",
-        width: "100vw",
         height: "90vh",
 
         display: "flex",
@@ -105,7 +104,6 @@ function Review() {
           display: "flex",
           paddingRight: "50px",
           justifyContent: "space-around",
-          width: "100vw",
         }}
       >
         <Container maxWidth="xl">
