@@ -15,6 +15,7 @@ import Card from "@mui/material/Card";
 import { CardHeader, Chip, CircularProgress, TextField } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 import CardContent from "@mui/material/CardContent";
+import { saveAs } from "file-saver";
 
 function Review() {
   let [deptCode, setDeptCode] = useState("");
@@ -75,10 +76,16 @@ function Review() {
     navigate("/sign-in");
   };
 
-  const downloadSyllabus = (syllabus:any) => {
-    console.log('@here', syllabus);
+  const downloadSyllabus = (syllabus: any) => {
+    console.log("@here", syllabus);
+    const binaryString = atob(syllabus.data);
+    const byteArray = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      byteArray[i] = binaryString.charCodeAt(i);
+    }
+    const blob = new Blob([byteArray], { type: syllabus.fileType });
+    saveAs(blob, syllabus.fileName);
   };
-
 
   return (
     <Box
@@ -244,7 +251,9 @@ function Review() {
                             {review.syllabus !== null && (
                               <Box sx={{ paddingTop: "20px" }}>
                                 <Button
-                                onClick={()=>{downloadSyllabus(review.syllabus)}}
+                                  onClick={() => {
+                                    downloadSyllabus(review.syllabus);
+                                  }}
                                   endIcon={<DownloadIcon />}
                                   size="small"
                                   variant="contained"
@@ -252,6 +261,26 @@ function Review() {
                                 >
                                   Download Syllabus
                                 </Button>
+                              </Box>
+                            )}
+                            {review.syllabus === null && (
+                              <Box sx={{ paddingTop: "20px" }}>
+                                <Card sx={{ padding: "5px", border: '2px solid #1976D2'  }}>
+                                  <Typography
+                                    variant="subtitle1"
+                                    color="initial"
+                                  >
+                                    Have a copy of this syllabus? help us add it
+                                    here! email us at{" "}
+                                    <a
+                                      style={{ color: "#000000" }}
+                                      href="mailto:pamruthurravi@scu.edu"
+                                    >
+                                      pamruthurravi@scu.edu
+                                    </a>
+                                    &nbsp;
+                                  </Typography>
+                                </Card>
                               </Box>
                             )}
                           </Container>
