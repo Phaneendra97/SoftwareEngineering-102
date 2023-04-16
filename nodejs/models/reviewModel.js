@@ -32,8 +32,9 @@ var ReviewSchema = new Schema(
       type: String,
       required: true,
     },
-    syllabusCopy: {
-      type: String,
+    syllabus: {
+      data:String,
+      fileName: String
     },
     reviews: [
       {

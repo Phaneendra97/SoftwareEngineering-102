@@ -13,6 +13,7 @@ import Box from "@mui/material/Box";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Card from "@mui/material/Card";
 import { CardHeader, Chip, CircularProgress, TextField } from "@mui/material";
+import DownloadIcon from "@mui/icons-material/Download";
 import CardContent from "@mui/material/CardContent";
 
 function Review() {
@@ -73,6 +74,11 @@ function Review() {
     localStorage.removeItem("Authorization");
     navigate("/sign-in");
   };
+
+  const downloadSyllabus = (syllabus:any) => {
+    console.log('@here', syllabus);
+  };
+
 
   return (
     <Box
@@ -154,10 +160,15 @@ function Review() {
                             <Typography variant="h6" color="initial">
                               {"Instructor: " + review["instructor"] + " | "}
                             </Typography>
-                            <Chip color="primary" label={review["credits"] + " credits"} />
                             <Chip
                               color="primary"
-                              label={"Avg Rating "+review["ratingAvg"] + "/10"}
+                              label={review["credits"] + " credits"}
+                            />
+                            <Chip
+                              color="primary"
+                              label={
+                                "Avg Rating " + review["ratingAvg"] + "/10"
+                              }
                             />
                           </Container>
                           <Container
@@ -172,7 +183,7 @@ function Review() {
                                   variant="outlined"
                                 >
                                   <CardContent>
-                                  <Chip label={reviewIndex + 1} />
+                                    <Chip label={reviewIndex + 1} />
                                     <Container
                                       maxWidth="xl"
                                       sx={{
@@ -181,7 +192,10 @@ function Review() {
                                         flexDirection: "column",
                                       }}
                                     >
-                                      <Container maxWidth="xl" sx={{display:"flex", gap:"10px"}}>
+                                      <Container
+                                        maxWidth="xl"
+                                        sx={{ display: "flex", gap: "10px" }}
+                                      >
                                         <TextField
                                           sx={{ width: "100%" }}
                                           id={
@@ -200,14 +214,45 @@ function Review() {
                                         maxWidth="xl"
                                         sx={{ display: "flex", gap: "10px" }}
                                       >
-                                        <Chip color="primary" label={"Rating "+userReview["rating"]+"/10"} />
-                                        <Chip color="primary" label={"Difficulty: "+userReview["difficulty"]} />
-                                        <Chip color="primary" label={"Grade: "+userReview["grade"]} />
+                                        <Chip
+                                          color="primary"
+                                          label={
+                                            "Rating " +
+                                            userReview["rating"] +
+                                            "/10"
+                                          }
+                                        />
+                                        <Chip
+                                          color="primary"
+                                          label={
+                                            "Difficulty: " +
+                                            userReview["difficulty"]
+                                          }
+                                        />
+                                        <Chip
+                                          color="primary"
+                                          label={
+                                            "Grade: " + userReview["grade"]
+                                          }
+                                        />
                                       </Container>
                                     </Container>
                                   </CardContent>
                                 </Card>
                               )
+                            )}
+                            {review.syllabus !== null && (
+                              <Box sx={{ paddingTop: "20px" }}>
+                                <Button
+                                onClick={()=>{downloadSyllabus(review.syllabus)}}
+                                  endIcon={<DownloadIcon />}
+                                  size="small"
+                                  variant="contained"
+                                  color="primary"
+                                >
+                                  Download Syllabus
+                                </Button>
+                              </Box>
                             )}
                           </Container>
                         </Container>
