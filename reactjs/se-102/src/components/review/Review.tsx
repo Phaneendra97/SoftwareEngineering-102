@@ -154,7 +154,7 @@ function Review() {
                             <Typography variant="h6" color="initial">
                               {"Instructor: " + review["instructor"] + " | "}
                             </Typography>
-                            <Chip label={review["credits"] + " credits"} />
+                            <Chip color="primary" label={review["credits"] + " credits"} />
                             <Chip
                               color="primary"
                               label={"Avg Rating "+review["ratingAvg"] + "/10"}
@@ -201,8 +201,8 @@ function Review() {
                                         sx={{ display: "flex", gap: "10px" }}
                                       >
                                         <Chip color="primary" label={"Rating "+userReview["rating"]+"/10"} />
-                                        <Chip color="secondary" label={"Difficulty: "+userReview["difficulty"]} />
-                                        <Chip color="success" label={"Grade: "+userReview["grade"]} />
+                                        <Chip color="primary" label={"Difficulty: "+userReview["difficulty"]} />
+                                        <Chip color="primary" label={"Grade: "+userReview["grade"]} />
                                       </Container>
                                     </Container>
                                   </CardContent>
