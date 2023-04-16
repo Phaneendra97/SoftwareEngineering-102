@@ -10,7 +10,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useNavigate } from "react-router-dom";
 import Fab from "@mui/material/Fab";
 import Box from "@mui/material/Box";
-import NavigateNextTwoToneIcon from "@mui/icons-material/NavigateNextTwoTone";
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 function Home() {
   const navigate = useNavigate();
@@ -144,12 +144,17 @@ function Home() {
           width: "100vw",
         }}
       >
-        <Typography variant="h4" color="initial">
-          Rate My Course @SCU
-        </Typography>
-        <Button variant="contained" color="primary" onClick={logout}>
-          logout
-        </Button>
+          <Container maxWidth="xl">
+          <Typography variant="h4" color="initial">
+            Rate My Course @SCU
+          </Typography>
+        </Container>
+
+        <Container maxWidth="xs" sx={{display:"flex", justifyContent:"space-around"}}>
+          <Button variant="contained" color="primary" onClick={logout}>
+            logout
+          </Button>
+        </Container>
       </Box>
       <Container
         sx={{
@@ -221,7 +226,7 @@ function Home() {
         </Container>
         {selectedCourseForForm != "" && (
           <Fab onClick={searchReview} color="primary" aria-label="add">
-            <NavigateNextTwoToneIcon />
+            <ArrowForwardIcon />
           </Fab>
         )}
       </Container>

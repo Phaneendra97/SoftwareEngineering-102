@@ -9,7 +9,6 @@ var ReviewSchema = new Schema(
   {
     courseName: {
       type: String,
-      unique: true,
       trim: true,
       required: true,
     },
