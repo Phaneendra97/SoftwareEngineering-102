@@ -109,6 +109,9 @@ function Review() {
 
   const writeAReview = (instructor: String) => {
     console.log("@here", instructor, userId);
+    navigate("/write-review", {
+      state: { instructor: instructor, userId: userId, dept: deptCode, course: courseCode},
+    });
   };
 
   return (

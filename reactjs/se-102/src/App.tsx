@@ -7,6 +7,7 @@ import Home from "./components/home/Home";
 import CircularProgress from "@mui/material/CircularProgress";
 import SignIn from "./components/signin/SignIn";
 import Review from "./components/review/Review";
+import AddReview from "./components/add-review/AddReview";
 
 function App() {
   const navigate = useNavigate();
@@ -73,6 +74,14 @@ function App() {
               element={
                 <Box sx={{ flexGrow: 1 }}>
                   <Review></Review>
+                </Box>
+              }
+            />
+            <Route
+              path="/write-review"
+              element={
+                <Box sx={{ flexGrow: 1 }}>
+                  <AddReview></AddReview>
                 </Box>
               }
             />
