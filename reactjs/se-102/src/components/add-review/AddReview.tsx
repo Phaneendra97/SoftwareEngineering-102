@@ -139,7 +139,6 @@ function AddReview() {
         });
     }
 
-    console.log("@here", payload);
   };
   return (
     <Box

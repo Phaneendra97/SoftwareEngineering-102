@@ -28,7 +28,6 @@ function Review() {
   let [loading, setLoading] = useState(true);
   useEffect(() => {
     if (state == null) {
-      console.log('@here');
       navigate("/");
     } else {
       const { dept, coursecode } = state;
@@ -107,7 +106,6 @@ function Review() {
   };
 
   const writeAReview = (instructor: String) => {
-    console.log("@here", instructor);
     navigate("/write-review", {
       state: { instructor: instructor, dept: deptCode, course: courseCode},
     });

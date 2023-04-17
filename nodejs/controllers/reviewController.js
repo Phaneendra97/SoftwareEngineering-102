@@ -131,7 +131,7 @@ exports.add_review = function (req, res) {
                 code: reqPayload.code,
                 instructor: reqPayload.instructor,
               },
-              { reviews: newPayload.reviews, ratingAvg: newAvgRating },
+              { reviews: newPayload.reviews, ratingAvg: newAvgRating.toFixed(1) },
               { new: true }
             )
             .then((updatedReview) => {

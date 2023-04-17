@@ -57,11 +57,6 @@ function Home() {
     }
   }, []);
 
-  // useEffect(() => {
-  //   console.log("@here");
-  //   setSelectedDeptForForm(selectedDept);
-  //   console.log(selectedDeptForForm);
-  // }, [selectedDept]);
 
   const handleDeptChange = (event: {
     target: { value: SetStateAction<string> };
