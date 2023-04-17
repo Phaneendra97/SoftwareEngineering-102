@@ -69,7 +69,7 @@ function AddReview() {
                   if (data.status == "success") {
                     setReviewObject(data.review);
                     setLoading(false);
-                    loadPreviousValues();
+                    loadPreviousValues(data.review.userReview);
                     // setMessageType("success");
                   } else if (data.status == "error") {
                     // setMessageType("error");
@@ -92,7 +92,14 @@ function AddReview() {
     }
   }, []);
 
-  const loadPreviousValues = () => {};
+  const loadPreviousValues = (reviewData: any) => {
+    setRating(reviewData.rating);
+    setReviewText(reviewData.review);
+    setGrade(reviewData.grade);
+    setDifficulty(reviewData.difficulty);
+
+
+  };
   const logout = () => {
     localStorage.removeItem("Authorization");
     navigate("/sign-in");
