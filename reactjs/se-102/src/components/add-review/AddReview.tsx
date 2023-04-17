@@ -69,7 +69,9 @@ function AddReview() {
                   if (data.status == "success") {
                     setReviewObject(data.review);
                     setLoading(false);
-                    loadPreviousValues(data.review.userReview);
+                    if (data.review.userReview != null) {
+                      loadPreviousValues(data.review.userReview);
+                    }
                     // setMessageType("success");
                   } else if (data.status == "error") {
                     // setMessageType("error");
@@ -97,8 +99,6 @@ function AddReview() {
     setReviewText(reviewData.review);
     setGrade(reviewData.grade);
     setDifficulty(reviewData.difficulty);
-
-
   };
   const logout = () => {
     localStorage.removeItem("Authorization");
@@ -145,7 +145,6 @@ function AddReview() {
           // setMessage(error);
         });
     }
-
   };
   return (
     <Box
