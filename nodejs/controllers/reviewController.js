@@ -83,7 +83,6 @@ exports.check_review_exists = function (req, res) {
 
 exports.add_review = function (req, res) {
   const reqPayload = req.body;
-
   if (req.user) {
     review
       .findOne({

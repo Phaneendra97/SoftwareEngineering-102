@@ -98,6 +98,7 @@ function AddReview() {
     navigate("/sign-in");
   };
   const submitReview = () => {
+    let authorization = localStorage.getItem("Authorization");
     let payload = {
       instructor: reviewObject["instructor"],
       dept: reviewObject["dept"],
@@ -107,32 +108,37 @@ function AddReview() {
       difficulty: difficulty,
       grade: grade,
     };
-
-    fetch("http://localhost:3000/add_review", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // do something with the data
-        if (data.status == "success") {
-          navigate("/course", {
-            state: { dept: payload.dept, coursecode: payload.code },
-          });
-        } else if (data.status == "error") {
-          // setMessageType("error");
-        }
-        // setMessage(data.message);
+    if (!authorization) {
+      navigate("/sign-in");
+    } else {
+      fetch("http://localhost:3000/add_review", {
+        method: "POST",
+        headers: {
+          Authorization: authorization,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
       })
-      .catch((error) => {
-        // handle the error
-        console.error(error);
-        // setMessageType("error");
-        // setMessage(error);
-      });
+        .then((response) => response.json())
+        .then((data) => {
+          // do something with the data
+          if (data.status == "success") {
+            navigate("/course", {
+              state: { dept: payload.dept, coursecode: payload.code },
+            });
+          } else if (data.status == "error") {
+            // setMessageType("error");
+          }
+          // setMessage(data.message);
+        })
+        .catch((error) => {
+          // handle the error
+          console.error(error);
+          // setMessageType("error");
+          // setMessage(error);
+        });
+    }
+
     console.log("@here", payload);
   };
   return (
