@@ -6,6 +6,8 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import Home from "./components/home/Home";
 import CircularProgress from "@mui/material/CircularProgress";
 import SignIn from "./components/signin/SignIn";
+import Review from "./components/review/Review";
+import AddReview from "./components/add-review/AddReview";
 
 function App() {
   const navigate = useNavigate();
@@ -44,7 +46,7 @@ function App() {
   return (
     <div className="App">
       <Box
-        sx={{ display: "flex", width: "100vw" }}
+        sx={{ display: "flex", flexGrow: 1 }}
         justifyContent={"center"}
         alignContent={"center"}
       >
@@ -54,7 +56,7 @@ function App() {
             <Route
               path="/"
               element={
-                <Box sx={{ flexGrow: 1 }}>
+                <Box sx={{ width: "100vw" }}>
                   <Home></Home>
                 </Box>
               }
@@ -64,6 +66,22 @@ function App() {
               element={
                 <Box sx={{ flexGrow: 1 }}>
                   <SignIn></SignIn>
+                </Box>
+              }
+            />
+            <Route
+              path="/course"
+              element={
+                <Box sx={{ flexGrow: 1 }}>
+                  <Review></Review>
+                </Box>
+              }
+            />
+            <Route
+              path="/write-review"
+              element={
+                <Box sx={{ flexGrow: 1 }}>
+                  <AddReview></AddReview>
                 </Box>
               }
             />
