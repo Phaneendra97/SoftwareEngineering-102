@@ -16,12 +16,17 @@ import { CardHeader, Chip, CircularProgress, TextField } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 import CardContent from "@mui/material/CardContent";
 import { saveAs } from "file-saver";
+import Slider from "@mui/material/Slider";
 import ReviewsOutlinedIcon from "@mui/icons-material/ReviewsOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 
 function AddReview() {
   let [reviewText, setReviewText] = useState("");
+  let [difficulty, setDifficulty] = useState("");
+  let [grade, setGrade] = useState("");
+
   let [reviewObject, setReviewObject]: any = useState();
+  let [rating, setRating] = useState(5);
   const { state } = useLocation();
   const navigate = useNavigate();
   let [loading, setLoading] = useState(true);
@@ -64,7 +69,6 @@ function AddReview() {
                   if (data.status == "success") {
                     setReviewObject(data.review);
                     setLoading(false);
-                    loadCommons();
                     loadPreviousValues();
                     // setMessageType("success");
                   } else if (data.status == "error") {
@@ -88,11 +92,48 @@ function AddReview() {
     }
   }, []);
 
-  const loadCommons = () => {};
   const loadPreviousValues = () => {};
   const logout = () => {
     localStorage.removeItem("Authorization");
     navigate("/sign-in");
+  };
+  const submitReview = () => {
+    let payload = {
+      instructor: reviewObject["instructor"],
+      dept: reviewObject["dept"],
+      code: reviewObject["code"],
+      review: reviewText,
+      rating: rating,
+      difficulty: difficulty,
+      grade: grade,
+    };
+
+    fetch("http://localhost:3000/add_review", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // do something with the data
+        if (data.status == "success") {
+          navigate("/course", {
+            state: { dept: payload.dept, coursecode: payload.code },
+          });
+        } else if (data.status == "error") {
+          // setMessageType("error");
+        }
+        // setMessage(data.message);
+      })
+      .catch((error) => {
+        // handle the error
+        console.error(error);
+        // setMessageType("error");
+        // setMessage(error);
+      });
+    console.log("@here", payload);
   };
   return (
     <Box
@@ -135,6 +176,20 @@ function AddReview() {
               maxWidth="xs"
               sx={{ display: "flex", justifyContent: "space-around" }}
             >
+              <Button
+                onClick={() => {
+                  navigate("/course", {
+                    state: {
+                      dept: reviewObject["dept"],
+                      coursecode: reviewObject["code"],
+                    },
+                  });
+                }}
+                variant="contained"
+                startIcon={<ArrowBackIcon />}
+              >
+                Go Back
+              </Button>
               <Button
                 onClick={() => {
                   navigate("/");
@@ -237,7 +292,7 @@ function AddReview() {
                     }}
                   >
                     <TextField
-                    sx={{width:"100%"}}
+                      sx={{ width: "100%" }}
                       multiline
                       value={reviewText}
                       onChange={(event) => {
@@ -256,18 +311,102 @@ function AddReview() {
                       padding: "10px",
                     }}
                   >
-                    <Container maxWidth="xl" sx={{ display: "flex" }}>
-                      {" "}
-                      <Typography variant="body1" color="initial">
-                        Course: {reviewObject["courseName"]}
-                      </Typography>
+                    <Container maxWidth="xl">
+                      <Slider
+                        value={rating}
+                        aria-label="Rating"
+                        defaultValue={5}
+                        valueLabelDisplay="auto"
+                        step={1}
+                        marks
+                        min={1}
+                        onChange={(
+                          event: Event,
+                          newValue: number | number[]
+                        ) => {
+                          if (typeof newValue === "number") {
+                            setRating(newValue);
+                          }
+                        }}
+                        max={10}
+                      />
                     </Container>
-                    <Container maxWidth="xl" sx={{ display: "flex" }}>
-                      <Typography variant="body1" color="initial">
-                        Instructor: {reviewObject["instructor"]}
+                    <Container sx={{ width: "15%" }}>
+                      <Typography id="non-linear-slider">
+                        Rating: {rating}
                       </Typography>
                     </Container>
                   </Container>
+                  <Container
+                    maxWidth="xl"
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      padding: "10px",
+                    }}
+                  >
+                    <Container maxWidth="xl" sx={{ display: "flex" }}>
+                      {" "}
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          Difficulty
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={difficulty}
+                          label="Difficulty"
+                          onChange={(event) => {
+                            setDifficulty(event.target.value);
+                          }}
+                        >
+                          <MenuItem value={"easy"}>easy</MenuItem>
+                          <MenuItem value={"medium"}>medium</MenuItem>
+                          <MenuItem value={"hard"}>hard</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Container>
+                    <Container maxWidth="xl" sx={{ display: "flex" }}>
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          Grade
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={grade}
+                          label="Grade"
+                          onChange={(event) => {
+                            setGrade(event.target.value);
+                          }}
+                        >
+                          <MenuItem value={"A"}>A</MenuItem>
+                          <MenuItem value={"A-"}>A-</MenuItem>
+                          <MenuItem value={"B+"}>B+</MenuItem>
+                          <MenuItem value={"B"}>B</MenuItem>
+                          <MenuItem value={"B-"}>B-</MenuItem>
+                          <MenuItem value={"C or Belolw"}>C or Below</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Container>
+                  </Container>
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      paddingTop: "20px",
+                    }}
+                  >
+                    <Button
+                      sx={{ width: "50%" }}
+                      onClick={submitReview}
+                      variant="contained"
+                      color="primary"
+                    >
+                      Submit Review
+                    </Button>
+                  </Box>
                 </Card>
               </Card>
             </Box>
