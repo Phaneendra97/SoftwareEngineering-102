@@ -8,7 +8,6 @@ var mongoose = require("mongoose"),
 var CourseListSchema = new Schema({
   dept: {
     type: String,
-    unique: true,
     trim: true,
     required: true,
   },
