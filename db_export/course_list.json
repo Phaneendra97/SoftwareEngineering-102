@@ -1,0 +1,22 @@
+[{
+  "_id": {
+    "$oid": "6439ae19e30309eb6f9bdf9c"
+  },
+  "dept": "COEN",
+  "course_code": "285",
+  "course_name": "Software Engineering"
+},{
+  "_id": {
+    "$oid": "6439af0ee30309eb6f9bdf9d"
+  },
+  "dept": "EMGT",
+  "course_code": "346",
+  "course_name": "Software Ethics"
+},{
+  "_id": {
+    "$oid": "643e25a6e1630a23ee92ad12"
+  },
+  "dept": "COEN",
+  "course_code": "315",
+  "course_name": "Distributed Systems"
+}]

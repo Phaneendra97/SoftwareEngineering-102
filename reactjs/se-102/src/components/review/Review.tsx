@@ -290,7 +290,7 @@ function Review() {
                                   Write a Review
                                 </Button>
                               </Box>
-                              {review.syllabus !== null && (
+                              {review.syllabus.data !== "" && (
                                 <Box
                                   sx={{
                                     paddingTop: "20px",

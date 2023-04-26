@@ -1,0 +1,13 @@
+[{
+  "_id": {
+    "$oid": "6439f7a8e30309eb6f9bdfa5"
+  },
+  "dept_code": "COEN",
+  "dept_name": "College of Engineering"
+},{
+  "_id": {
+    "$oid": "6439f7f7e30309eb6f9bdfa6"
+  },
+  "dept_code": "EMGT",
+  "dept_name": "Engineering Management"
+}]
