@@ -311,7 +311,7 @@ function Review() {
                                   </Button>
                                 </Box>
                               )}
-                              {review.syllabus === null && (
+                              {review.syllabus.data === "" && (
                                 <Box sx={{ paddingTop: "20px" }}>
                                   <Card
                                     sx={{
