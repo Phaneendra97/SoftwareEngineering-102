@@ -4,7 +4,7 @@
   "description": "software engineering 285 project",
   "main": "index.js",
   "scripts": {
-    "test": "jest --detectOpenHandles"
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
