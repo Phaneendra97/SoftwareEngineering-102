@@ -7,6 +7,17 @@ var express = require("express"),
   Review = require("./models/reviewModel"),
   bodyParser = require("body-parser"),
   jsonwebtoken = require("jsonwebtoken");
+  const winston = require('winston');
+
+  const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.json(),
+    transports: [
+      new winston.transports.Console(),
+      new winston.transports.File({ filename: 'logfile.log' })
+    ]
+  });
+
 const mongoose = require("mongoose");
 const option = {
   socketTimeoutMS: 30000,
@@ -27,11 +38,13 @@ app.use(function (req, res, next) {
 const mongoURI = process.env.MONGODB_URI;
 mongoose.connect("mongodb://localhost:27017/se102", option).then(
   function () {
-    console.log("connected successfully to DB");
+    logger.info("connected successfully to DB");
     //connected successfully
   },
   function (err) {
-    console.log(err);
+    logger.error("DB connection failed");
+    logger.error(err);
+
     //err handle
   }
 );
@@ -65,9 +78,9 @@ routes(app);
 // app.use(function(req, res) {
 //   res.status(404).send({ url: req.originalUrl + ' not found' })
 // });
-
+logger.info("Server Initialized");
 app.listen(port);
 
-console.log(" RESTful API server started on: " + port);
+logger.info(" RESTful API server started on: " + port);
 
 module.exports = app;

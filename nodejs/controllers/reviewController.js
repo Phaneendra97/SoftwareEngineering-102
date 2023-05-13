@@ -2,20 +2,32 @@ var mongoose = require("mongoose"),
   jwt = require("jsonwebtoken"),
   bcrypt = require("bcrypt");
 review = mongoose.model("review");
+const winston = require("winston");
+const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: "logfile.log" }),
+  ],
+});
 
 exports.get_review = function (req, res) {
+  logger.info("Get Get Review Function");
   const { dept, coursecode } = req.query;
   if (req.user) {
     review
       .find({ dept: dept, code: coursecode })
       .then((reviews) => {
         if (reviews != null) {
+          logger.info("Get reviews list function API function");
           response = {
             reviews: reviews,
             status: "success",
           };
           return res.json(response);
         } else {
+          logger.info("Get reviews list function API falied, no reviews exist");
           res.status(500);
           return res.json({
             status: "error",
@@ -24,6 +36,7 @@ exports.get_review = function (req, res) {
         }
       })
       .catch((error) => {
+        logger.info("Get reviews list function API error", error);
         return res.json(error);
       });
   } else {
@@ -34,6 +47,7 @@ exports.get_review = function (req, res) {
 };
 
 exports.check_review_exists = function (req, res) {
+  logger.info("check if review exists function");
   const reqPayload = req.body;
   if (req.user) {
     review
@@ -51,6 +65,7 @@ exports.check_review_exists = function (req, res) {
           userReview: null,
         };
         if (reviewObject != null) {
+          logger.info("check if review exists function API, review found");
           let reviews = reviewObject.reviews;
           for (i = 0; i < reviews.length; i++) {
             if (reviews[i].reviewerId == req.user._id) {
@@ -64,6 +79,7 @@ exports.check_review_exists = function (req, res) {
           };
           return res.json(response);
         } else {
+          logger.info("check if review exists function API, review not found");
           res.status(500);
           return res.json({
             status: "error",
@@ -82,6 +98,7 @@ exports.check_review_exists = function (req, res) {
 };
 
 exports.add_review = function (req, res) {
+  logger.info("Add review function");
   const reqPayload = req.body;
   if (req.user) {
     review
@@ -91,6 +108,7 @@ exports.add_review = function (req, res) {
         instructor: reqPayload.instructor,
       })
       .then((reviewObject) => {
+        logger.info("check if review exists function");
         if (reviewObject != null) {
           let newPayload = reviewObject;
           reviewPayload = {
@@ -131,7 +149,10 @@ exports.add_review = function (req, res) {
                 code: reqPayload.code,
                 instructor: reqPayload.instructor,
               },
-              { reviews: newPayload.reviews, ratingAvg: newAvgRating.toFixed(1) },
+              {
+                reviews: newPayload.reviews,
+                ratingAvg: newAvgRating.toFixed(1),
+              },
               { new: true }
             )
             .then((updatedReview) => {
@@ -153,6 +174,7 @@ exports.add_review = function (req, res) {
         }
       })
       .catch((error) => {
+        logger.error("add review failed ", error);
         return res.json(error);
       });
   } else {
