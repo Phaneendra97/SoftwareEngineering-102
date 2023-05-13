@@ -1,22 +1,38 @@
 var mongoose = require("mongoose"),
   jwt = require("jsonwebtoken"),
   bcrypt = require("bcrypt");
+const winston = require("winston");
+
 courseList = mongoose.model("course_list");
 
+const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: "logfile.log" }),
+  ],
+});
 
 exports.get_course_list_by_dept = function (req, res) {
+  logger.info("Get Course list By Dept function");
   if (req.user) {
     const { dept } = req.query;
     courseList
-      .find({ dept: dept  })
+      .find({ dept: dept })
       .then((courses) => {
         if (courses != null) {
+          logger.info("Get Course list By Dept API success");
           response = {
             courseList: courses,
             status: "success",
           };
           return res.json(response);
         } else {
+          logger.error(
+            "Get Course list By Dept API failed ",
+            "no records found"
+          );
           res.status(500);
           return res.json({
             status: "error",
@@ -25,6 +41,7 @@ exports.get_course_list_by_dept = function (req, res) {
         }
       })
       .catch((error) => {
+        logger.error("Get Course list By Dept API failed ", error);
         return res.json(error);
       });
   } else {
@@ -33,37 +50,3 @@ exports.get_course_list_by_dept = function (req, res) {
       .json({ message: "Unauthorized user!!", status: "error" });
   }
 };
-
-function sendEmail(otp, email) {
-  const request = mailjet.post("send", { version: "v3.1" }).request({
-    Messages: [
-      {
-        From: {
-          Email: "phaneendra0897@gmail.com",
-          Name: "Rate My Course",
-        },
-        To: [
-          {
-            Email: email,
-            Name: email,
-          },
-        ],
-        Subject: "Greetings from Rate My Course.",
-        TextPart: "Rate My Course confirmation email",
-        HTMLPart:
-          "Link to verify: http://localhost:3000/auth/verify?email=" +
-          email +
-          "&otp=" +
-          otp,
-        CustomID: "Verify",
-      },
-    ],
-  });
-  request
-    .then((result) => {
-      console.log(result.body);
-    })
-    .catch((err) => {
-      console.log(err.statusCode);
-    });
-}

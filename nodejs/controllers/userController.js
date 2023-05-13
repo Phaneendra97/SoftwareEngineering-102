@@ -2,12 +2,21 @@ var mongoose = require("mongoose"),
   jwt = require("jsonwebtoken"),
   bcrypt = require("bcrypt");
 User = mongoose.model("User");
-
+const winston = require("winston");
 const Mailjet = require("node-mailjet");
 const mailjet = Mailjet.apiConnect(
   "a961fc3b933e87ab30b045e24194c679",
   "ad68c759265f128846bfa9ed3754ad57"
 );
+
+const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: "logfile.log" }),
+  ],
+});
 
 exports.register = function (req, res) {
   var newUser = new User(req.body);
@@ -45,21 +54,25 @@ exports.register = function (req, res) {
 };
 
 exports.sign_in = function (req, res) {
+  logger.info("Inside Sign In Block");
   User.findOne({
     email: req.body.email,
   })
     .then((user) => {
       if (!user || !user.comparePassword(req.body.password)) {
+        logger.info("Auth failed, Invalid user");
         return res.status(401).json({
           message: "Authentication failed. Invalid user or password.",
           status: "error",
         });
       } else if (!user.isVerified) {
+        logger.info("unverified user ", user.email);
         return res.status(400).json({
           message: "Please verify before logging in",
           status: "error",
         });
       } else {
+        logger.info("User ", user.email, "signed in successfully");
         return res.json({
           token: jwt.sign({ email: user.email, _id: user._id }, "RESTFULAPIs"),
           message: "Signed In",
@@ -68,17 +81,21 @@ exports.sign_in = function (req, res) {
       }
     })
     .catch((error) => {
+      logger.error("failed with error", error);
       return res.json(error);
     });
 };
 
 exports.verify_otp = function (req, res) {
+  logger.info("Inside Verify OTP");
+
   const { email, otp } = req.query;
   User.findOne({
     email: email,
   })
     .then((user) => {
       if (!user) {
+        logger.error("No user present in OPT: ", email);
         return res
           .status(500)
           .send(
@@ -88,13 +105,17 @@ exports.verify_otp = function (req, res) {
         if (otp == user.otp) {
           User.updateOne({ email: email }, { isVerified: true })
             .then((result) => {
+              logger.info("User ", email, " verified");
+
               return res
-                .status(500)
+                .status(200)
                 .send(
                   "<html><body><h2>You're verified, proceed to login!</h2></body></html>"
                 );
             })
             .catch((err) => {
+              logger.error("error with OPT verify", err);
+
               return res
                 .status(500)
                 .send(
@@ -111,27 +132,35 @@ exports.verify_otp = function (req, res) {
       }
     })
     .catch((error) => {
+      logger.error("error OTP verify ", error);
+
       return res.json(error);
     });
 };
 
 exports.loginRequired = function (req, res, next) {
+  logger.info("login required function");
   if (req.user) {
     next();
   } else {
+    logger.info("Unauthoried User!!");
     return res.status(401).json({ message: "Unauthorized user!!" });
   }
 };
 exports.profile = function (req, res, next) {
+  logger.info("Inside Profile function");
   if (req.user) {
+    logger.info("User verified");
     res.send(req.user);
     next();
   } else {
+    logger.info("Invalid Token");
     return res.status(401).json({ message: "Invalid token" });
   }
 };
 
 function sendEmail(otp, email) {
+  logger.info("Email verify block");
   const request = mailjet.post("send", { version: "v3.1" }).request({
     Messages: [
       {
@@ -158,10 +187,10 @@ function sendEmail(otp, email) {
   });
   request
     .then((result) => {
-      console.log(result.body);
+      logger.info(request.body);
     })
     .catch((err) => {
-      console.log(err.statusCode);
+      logger.info(err.statusCode);
     });
 }
 
