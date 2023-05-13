@@ -107,7 +107,7 @@ function Review() {
 
   const writeAReview = (instructor: String) => {
     navigate("/write-review", {
-      state: { instructor: instructor, dept: deptCode, course: courseCode},
+      state: { instructor: instructor, dept: deptCode, course: courseCode },
     });
   };
 
@@ -131,7 +131,7 @@ function Review() {
       >
         <Container maxWidth="xl">
           <Typography variant="h4" color="initial">
-            Rate My Course @SCU
+            Rate My Course @ SCU
           </Typography>
         </Container>
 
@@ -156,16 +156,42 @@ function Review() {
       <Box sx={{ paddingTop: "2%" }}>
         {!loading && (
           <Container maxWidth="xl">
-            <Card>
+            <Card variant="outlined">
               <CardContent>
                 <Typography variant="h5" color="initial">
-                  Result for course: {deptCode}
-                  {courseCode}
+                  Result for course:{" "}
+                  {
+                    <Chip
+                      sx={{
+                        borderRadius: "5px",
+                        fontSize: "16px",
+                        fontWeight: "800",
+                        borderWidth: "2px",
+                        marginRight: "20px",
+                      }}
+                      color="primary"
+                      variant="outlined"
+                      label={deptCode + " " + courseCode}
+                    />
+                  }
+                  {
+                    <Chip
+                      sx={{
+                        borderRadius: "5px",
+                        fontSize: "16px",
+                        fontWeight: "800",
+                        borderWidth: "2px",
+                      }}
+                      color="primary"
+                      label={reviewArray[0].courseName}
+                      variant="outlined"
+                    />
+                  }
                 </Typography>
                 <Container maxWidth="xl">
                   {reviewArray.map((review, index) => (
                     <Card
-                      sx={{ marginTop: "10px" }}
+                      sx={{ marginTop: "25px", bgcolor: "#fcfcfc" }}
                       key={"course_" + index}
                       variant="outlined"
                     >
@@ -180,20 +206,60 @@ function Review() {
                         >
                           <Container
                             maxWidth="xl"
-                            sx={{ display: "flex", gap: "10px" }}
+                            sx={{
+                              display: "flex",
+                              gap: "10px",
+                              marginTop: "20px",
+                            }}
                           >
-                            <Chip label={index + 1} />
-                            <Typography variant="h6" color="initial">
-                              {review["courseName"] + " | "}
-                            </Typography>
-                            <Typography variant="h6" color="initial">
-                              {"Instructor: " + review["instructor"] + " | "}
-                            </Typography>
                             <Chip
+                              sx={{
+                                borderRadius: "5px",
+                                fontSize: "16px",
+                                fontWeight: "800",
+                                borderWidth: "2px",
+                              }}
                               color="primary"
+                              variant="outlined"
+                              label={index + 1}
+                            />
+
+                            {/* <Typography variant="h6" color="initial">
+                              {review["courseName"] + " | "}
+                            </Typography> */}
+                            <Chip
+                              sx={{
+                                borderRadius: "5px",
+                                fontSize: "16px",
+                                fontWeight: "800",
+                                borderWidth: "2px",
+                              }}
+                              color="primary"
+                              variant="outlined"
+                              label={"Instructor: " + review["instructor"]}
+                            />
+                            {/* <Typography variant="h6" color="initial">
+                              {"Instructor: " + review["instructor"] + " | "}
+                            </Typography> */}
+                            <Chip
+                              sx={{
+                                borderRadius: "5px",
+                                fontSize: "16px",
+                                fontWeight: "800",
+                                borderWidth: "2px",
+                              }}
+                              color="primary"
+                              variant="outlined"
                               label={review["credits"] + " credits"}
                             />
                             <Chip
+                              variant="outlined"
+                              sx={{
+                                borderRadius: "5px",
+                                fontSize: "16px",
+                                fontWeight: "800",
+                                borderWidth: "2px",
+                              }}
                               color="primary"
                               label={
                                 "Avg Rating " + review["ratingAvg"] + "/10"
@@ -211,8 +277,17 @@ function Review() {
                                   key={"review_" + index + "_" + reviewIndex}
                                   variant="outlined"
                                 >
-                                  <CardContent>
-                                    <Chip label={reviewIndex + 1} />
+                                  <CardContent sx={{ display: "flex" }}>
+                                    <Chip
+                                      sx={{
+                                        fontSize: "14px",
+                                        fontWeight: "800",
+                                        borderWidth: "2px",
+                                      }}
+                                      variant="outlined"
+                                      color="primary"
+                                      label={reviewIndex + 1}
+                                    />
                                     <Container
                                       maxWidth="xl"
                                       sx={{
@@ -244,6 +319,12 @@ function Review() {
                                         sx={{ display: "flex", gap: "10px" }}
                                       >
                                         <Chip
+                                          sx={{
+                                            borderRadius: "10px",
+                                            fontWeight: "600",
+                                            borderWidth: "2px",
+                                          }}
+                                          variant="outlined"
                                           color="primary"
                                           label={
                                             "Rating " +
@@ -252,6 +333,12 @@ function Review() {
                                           }
                                         />
                                         <Chip
+                                          sx={{
+                                            borderRadius: "10px",
+                                            fontWeight: "600",
+                                            borderWidth: "2px",
+                                          }}
+                                          variant="outlined"
                                           color="primary"
                                           label={
                                             "Difficulty: " +
@@ -259,6 +346,12 @@ function Review() {
                                           }
                                         />
                                         <Chip
+                                          sx={{
+                                            borderRadius: "10px",
+                                            fontWeight: "600",
+                                            borderWidth: "2px",
+                                          }}
+                                          variant="outlined"
                                           color="primary"
                                           label={
                                             "Grade: " + userReview["grade"]
@@ -286,6 +379,7 @@ function Review() {
                                   size="small"
                                   variant="contained"
                                   color="primary"
+                                 
                                 >
                                   Write a Review
                                 </Button>
@@ -306,6 +400,7 @@ function Review() {
                                     size="small"
                                     variant="contained"
                                     color="primary"
+                                   
                                   >
                                     Download Syllabus
                                   </Button>
@@ -315,18 +410,22 @@ function Review() {
                                 <Box sx={{ paddingTop: "20px" }}>
                                   <Card
                                     sx={{
+                                      fontWeight: "500",
                                       padding: "5px",
                                       border: "2px solid #1976D2",
                                     }}
                                   >
                                     <Typography
                                       variant="subtitle1"
-                                      color="initial"
+                                      color="#1976d2"
                                     >
                                       Have a copy of this syllabus? help us add
                                       it here! email us at{" "}
                                       <a
-                                        style={{ color: "#000000" }}
+                                        style={{
+                                          color: "#1976d2",
+                                          fontWeight: "500",
+                                        }}
                                         href="mailto:pamruthurravi@scu.edu"
                                       >
                                         pamruthurravi@scu.edu
