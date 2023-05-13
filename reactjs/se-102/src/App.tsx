@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import "./App.css";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import Home from "./components/home/Home";
 import CircularProgress from "@mui/material/CircularProgress";
