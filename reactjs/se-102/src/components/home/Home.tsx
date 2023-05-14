@@ -10,7 +10,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useNavigate } from "react-router-dom";
 import Fab from "@mui/material/Fab";
 import Box from "@mui/material/Box";
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import SearchIcon from '@mui/icons-material/Search';
 
 function Home() {
   const navigate = useNavigate();
@@ -221,7 +221,7 @@ function Home() {
         </Container>
         {selectedCourseForForm != "" && (
           <Fab onClick={searchReview} color="primary" aria-label="add">
-            <ArrowForwardIcon />
+            <SearchIcon />
           </Fab>
         )}
       </Container>
