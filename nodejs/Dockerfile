@@ -1,4 +1,4 @@
-#DockerFile for Node Server
+#Dockerfile for Node Server
 FROM node
 WORKDIR /app
 COPY package.json .

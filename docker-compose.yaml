@@ -1,55 +1,82 @@
-# docker compose version which is currently 3.8
-version: "3.8"
-
-# services : is a list of our container
+version: "3"
 services:
-  # name is optional for our mongodb
-  mymongodb:
-    # since mongo is an offical image we can use it.
-    image: "mongo"
-
-    # the port that we want to publish for mongodb
+  node:
+    container_name: node
+    build:
+      context: ./nodejs
+      dockerfile: Dockerfile
     ports:
-      - "27017:27017"
-
-    # our mongodb depends on volume to keep the data alive.
-    volumes:
-      - data:/data/db
-
-    # our environment variable
-    #environment:
-      #MONGO_INITDB_ROOT_USERNAME: "anas"
-      #MONGO_INITDB_ROOT_PASSWORD: "12345"
-
-  # name is optional for our backend
-  backend:
-    # to build an image based on Dockerfile
-    # it looks in this folder to find Dockerfile to build an image
-    build: ./nodejs
-    # the port that we want to publish for backend
-    ports:
-      - "8080:8080"
-
-    # depends_on means it will start our backend container once mongo-container is  up and running.
-    depends_on:
-      - mymongodb
-
-  # name is optional for our frontend
-  frontend:
-
-    build: ./reactjs/se-102
-
-    # the port that we want to publish for frontend
+      - "3000:3000"
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: host.docker.internal:24224
+    links:
+      - fluentd
+  react:
+    build:
+      context: ./reactjs/se-102
+      dockerfile: Dockerfile
     ports:
       - "80:80"
-    # allow interactive mode
-    stdin_open: true
-    tty: true
+  fluentd:
+    container_name: fluentd
+    platform: linux/amd64
+    image: fluent/fluentd:v1.14.2-debian-1.0
+    links:
+      - "elasticsearch"
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+    networks:
+      - elastic
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.13.4
+    ports:
+      - "9200:9200"
+    networks:
+      - elastic
+    environment:
+      - node.name=es01
+      - cluster.name=es-docker-cluster
+      - bootstrap.memory_lock=false
+      - cluster.initial_master_nodes=es01
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:7.13.4
+    links:
+      - "elasticsearch"
+    ports:
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_URL: http://es01:9200
+      ELASTICSEARCH_HOSTS: http://es01:9200
+    networks:
+      - elastic
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    ports:
+      - "3010:3000"
+    volumes:
+      - grafana_config:/etc/grafana
+      - grafana_data:/var/lib/grafana
+      - grafana_logs:/var/log/grafana
 
-    # it will start our frontend container once backend-container is  up and running.
-    depends_on:
-      - backend
+networks:
+  elastic:
+    driver: bridge
 
-# declare the volumes name that our app is using.
 volumes:
-  data:
+  grafana_config:
+  grafana_data:
+  grafana_logs:
