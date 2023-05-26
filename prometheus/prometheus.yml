@@ -38,6 +38,28 @@ scrape_configs:
     static_configs:
       - targets: ['host.docker.internal:9323']
 
+  - job_name: 'react'
+    # scheme defaults to 'http'.
+    metrics_path: /health
+    scrape_interval: 2s
+    static_configs:
+      - targets: ['host.docker.internal:80']
+
+  - job_name: 'node'
+    # scheme defaults to 'http'.
+    metrics_path: /health
+    scrape_interval: 2s
+    static_configs:
+      - targets: ['host.docker.internal:3000']
+
+  - job_name: 'reactClone'
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+    metrics_path: /health
+    scrape_interval: 2s
+    static_configs:
+      - targets: ['host.docker.internal:81']
+
   - job_name: 'services' # This service doesn't exist this will always be down
     static_configs:
       - targets:

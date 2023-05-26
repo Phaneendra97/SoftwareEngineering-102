@@ -17,6 +17,12 @@ services:
       - "./alertmanager:/config"
       - alertmanager-data:/data
     command: --config.file=/config/alertmanager.yml --log.level=debug
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
   node:
     container_name: node
     build:
@@ -36,6 +42,12 @@ services:
       dockerfile: Dockerfile
     ports:
       - "80:80"
+  reacttestclone: #just a clone to show prometheus alerting
+    build:
+      context: ./reactjs/se-102
+      dockerfile: Dockerfile
+    ports:
+      - "81:80"
   grafana:
     container_name: grafana
     image: grafana/grafana
@@ -46,7 +58,7 @@ services:
       - grafana_data:/var/lib/grafana
       - grafana_logs:/var/log/grafana
 
-# spent lot of time with fluentd I assume the issues are because of linux/amd64 based on my observations.
+# spent a lot of time with fluentd I assume the issues are because of linux/amd64 based on my observations.
 #  fluentd:
 #    container_name: fluentd
 #    platform: linux/amd64
@@ -98,3 +110,4 @@ volumes:
   grafana_logs:
   prometheus-data:
   alertmanager-data:
+  mongodb-data:
