@@ -1,11 +1,9 @@
 # my global config
 global:
-  scrape_interval:     30s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
-  evaluation_interval: 10s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  scrape_interval:     30s # Set the scrape interval to every 30 seconds. Default is every 1 minute.
+  evaluation_interval: 10s # Evaluate rules every 10 seconds. The default is every 1 minute.
   # scrape_timeout is set to the global default (10s).
 
-  # Attach these labels to any time series or alerts when communicating with
-  # external systems (federation, remote storage, Alertmanager).
   external_labels:
     monitor: 'codelab-monitor'
 
@@ -24,38 +22,28 @@ rule_files:
 scrape_configs:
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
   - job_name: 'prometheus'
-
-    # metrics_path defaults to '/metrics'
-    # scheme defaults to 'http'.
-
     static_configs:
       - targets: ['127.0.0.1:9090'] # Only works on Docker Desktop for Mac
 
   - job_name: 'docker'
-      # metrics_path defaults to '/metrics'
-    # scheme defaults to 'http'.
     scrape_interval: 2s
     static_configs:
       - targets: ['host.docker.internal:9323']
 
   - job_name: 'react'
-    # scheme defaults to 'http'.
-    metrics_path: /health
+    metrics_path: /health.html
     scrape_interval: 2s
     static_configs:
       - targets: ['host.docker.internal:80']
 
   - job_name: 'node'
-    # scheme defaults to 'http'.
     metrics_path: /health
     scrape_interval: 2s
     static_configs:
       - targets: ['host.docker.internal:3000']
 
   - job_name: 'reactClone'
-    # metrics_path defaults to '/metrics'
-    # scheme defaults to 'http'.
-    metrics_path: /health
+    metrics_path: /health.html
     scrape_interval: 2s
     static_configs:
       - targets: ['host.docker.internal:81']
