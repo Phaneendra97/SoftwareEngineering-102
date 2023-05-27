@@ -3,6 +3,7 @@ module.exports = function (app) {
   var courseController = require("../controllers/courseController.js");
   var deptController = require("../controllers/deptController.js");
   var reviewController = require("../controllers/reviewController.js");
+  var healthController = require("../controllers/healthController.js");
 
   app.route("/profile").post(userHandlers.loginRequired, userHandlers.profile);
   app.route("/auth/register").post(userHandlers.register);
@@ -15,5 +16,6 @@ module.exports = function (app) {
   app.route("/review").get(reviewController.get_review);
   app.route("/check_review_exists").post(reviewController.check_review_exists);
   app.route("/add_review").post(reviewController.add_review);
+  app.route("/health").get(healthController.healthCheck);
 
 };
