@@ -14,5 +14,5 @@ const logger = winston.createLogger({
 });
 
 exports.healthCheck = function (req, res) {
-  return res.status(200).json({ message: "Alive", status: "success" });
+  return res.send("success");
 };
