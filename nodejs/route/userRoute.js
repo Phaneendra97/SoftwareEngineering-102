@@ -5,7 +5,6 @@ module.exports = function (app) {
   var reviewController = require("../controllers/reviewController.js");
   var healthController = require("../controllers/healthController.js");
 
-
   app.route("/profile").post(userHandlers.loginRequired, userHandlers.profile);
   app.route("/auth/register").post(userHandlers.register);
   app.route("/auth/sign_in").post(userHandlers.sign_in);
@@ -18,6 +17,5 @@ module.exports = function (app) {
   app.route("/check_review_exists").post(reviewController.check_review_exists);
   app.route("/add_review").post(reviewController.add_review);
   app.route("/health").get(healthController.healthCheck);
-
 
 };

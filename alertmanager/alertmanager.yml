@@ -1,0 +1,14 @@
+route:
+  receiver: 'mail'
+  repeat_interval: 5m
+  group_by: [ alertname ]
+
+receivers:
+  - name: 'mail'
+    email_configs:
+      - smarthost: 'smtp.gmail.com:465'
+        auth_username: ''
+        auth_password: ""
+        from: '@gmail.com'
+        to: ''
+        require_tls: false
