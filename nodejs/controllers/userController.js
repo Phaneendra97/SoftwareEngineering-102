@@ -3,11 +3,17 @@ var mongoose = require("mongoose"),
   bcrypt = require("bcrypt");
 User = mongoose.model("User");
 const winston = require("winston");
-const Mailjet = require("node-mailjet");
-const mailjet = Mailjet.apiConnect(
-  "a961fc3b933e87ab30b045e24194c679",
-  "ad68c759265f128846bfa9ed3754ad57"
-);
+
+// zvlxaypnergzcmgx
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "phaneendra0897@gmail.com", // Replace with your Gmail email address
+    pass: "zvlxaypnergzcmgx", // Replace with the generated app password
+  },
+});
 
 const logger = winston.createLogger({
   level: "info",
@@ -161,37 +167,27 @@ exports.profile = function (req, res, next) {
 
 function sendEmail(otp, email) {
   logger.info("Email verify block");
-  const request = mailjet.post("send", { version: "v3.1" }).request({
-    Messages: [
-      {
-        From: {
-          Email: "phaneendra0897@gmail.com",
-          Name: "Rate My Course",
-        },
-        To: [
-          {
-            Email: email,
-            Name: email,
-          },
-        ],
-        Subject: "Greetings from Rate My Course.",
-        TextPart: "Rate My Course confirmation email",
-        HTMLPart:
-          "Link to verify: http://localhost:3000/auth/verify?email=" +
-          email +
-          "&otp=" +
-          otp,
-        CustomID: "Verify",
-      },
-    ],
+
+  const mailOptions = {
+    from: "phaneendra0897@gmail.com", // Replace with your Gmail email address
+    to: email, // Replace with the recipient's email address
+    subject: "Greetings from Rate My Course.",
+    text:
+      "Link to verify: http://localhost:3000/auth/verify?email=" +
+      email +
+      "&otp=" +
+      otp,
+  };
+
+  // Send the email
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      logger.info("Error:", error);
+    } else {
+      logger.info("Email sent:", info.response);
+    }
   });
-  request
-    .then((result) => {
-      logger.info(request.body);
-    })
-    .catch((err) => {
-      logger.info(err.statusCode);
-    });
+  
 }
 
 function generateRandomNumber() {
