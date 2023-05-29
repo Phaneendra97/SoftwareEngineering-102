@@ -1,0 +1,113 @@
+version: "3"
+services:
+  prometheus:
+    image: prom/prometheus:v2.21.0
+    ports:
+      - 9000:9090
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    command: --web.enable-lifecycle  --config.file=/etc/prometheus/prometheus.yml  #with this command u can reload configuration files without restarting prometheus
+  alertmanager:
+    image: prom/alertmanager:v0.23.0
+    #restart: unless-stopped
+    ports:
+      - "9093:9093"
+    volumes:
+      - "./alertmanager:/config"
+      - alertmanager-data:/data
+    command: --config.file=/config/alertmanager.yml --log.level=debug
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+  node:
+    container_name: node
+    build:
+      context: ./nodejs
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    #logging:
+      #driver: "fluentd"
+      #options:
+        #fluentd-address: host.docker.internal:24224
+    #links:
+      #- fluentd
+  react:
+    build:
+      context: ./reactjs/se-102
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+  reacttestclone: #just a clone to show prometheus alerting
+    build:
+      context: ./reactjs/se-102
+      dockerfile: Dockerfile
+    ports:
+      - "81:80"
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    ports:
+      - "3010:3000"
+    volumes:
+      - grafana_config:/etc/grafana
+      - grafana_data:/var/lib/grafana
+      - grafana_logs:/var/log/grafana
+
+# spent a lot of time with fluentd I assume the issues are because of linux/amd64 based on my observations.
+#  fluentd:
+#    container_name: fluentd
+#    platform: linux/amd64
+#    image: fluent/fluentd:v1.14.2-debian-1.0
+#    links:
+#      - "elasticsearch"
+#    ports:
+#      - "24224:24224"
+#      - "24224:24224/udp"
+#    networks:
+#      - elastic
+
+#no logging not using this for now
+#  elasticsearch:
+#    container_name: elasticsearch
+#    image: docker.elastic.co/elasticsearch/elasticsearch:7.13.4
+#    ports:
+#      - "9200:9200"
+#    networks:
+#      - elastic
+#    environment:
+#      - node.name=es01
+#      - cluster.name=es-docker-cluster
+#      - bootstrap.memory_lock=false
+#      - cluster.initial_master_nodes=es01
+#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+
+#not using this for now going with grafana for metrics visualisation.
+#  kibana:
+#    container_name: kibana
+#    image: docker.elastic.co/kibana/kibana:7.13.4
+#    links:
+#      - "elasticsearch"
+#    ports:
+#      - 5601:5601
+#    environment:
+#      ELASTICSEARCH_URL: http://es01:9200
+#      ELASTICSEARCH_HOSTS: http://es01:9200
+#    networks:
+#      - elastic
+
+networks:
+  elastic:
+    driver: bridge
+
+volumes:
+  grafana_config:
+  grafana_data:
+  grafana_logs:
+  prometheus-data:
+  alertmanager-data:
+  mongodb-data:

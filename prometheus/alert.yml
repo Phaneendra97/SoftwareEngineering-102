@@ -1,0 +1,15 @@
+groups:
+  - name: DemoAlerts
+    rules:
+      - alert: InstanceDown #Test Service always down
+        expr: up{job="services"} < 1
+        for: 5m
+      - alert: React Clone Instance is Down
+        expr: up{job="reactClone"} < 1
+        for: 1m
+      - alert: React Instance is Down
+        expr: up{job="react"} < 1
+        for: 1m
+      - alert: Node Instance is Down
+        expr: up{job="node"} < 1
+        for: 1m

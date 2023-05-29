@@ -1,0 +1,54 @@
+# my global config
+global:
+  scrape_interval:     30s # Set the scrape interval to every 30 seconds. Default is every 1 minute.
+  evaluation_interval: 10s # Evaluate rules every 10 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+  external_labels:
+    monitor: 'codelab-monitor'
+
+alerting:
+  alertmanagers:
+    - scheme: http
+      static_configs:
+        - targets: [ 'alertmanager:9093' ]
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+ - alert.yml
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['127.0.0.1:9090'] # Only works on Docker Desktop for Mac
+
+  - job_name: 'docker'
+    scrape_interval: 2s
+    static_configs:
+      - targets: ['host.docker.internal:9323']
+
+  - job_name: 'react'
+    metrics_path: /health.html
+    scrape_interval: 2s
+    static_configs:
+      - targets: ['host.docker.internal:80']
+
+  - job_name: 'node'
+    metrics_path: /health
+    scrape_interval: 2s
+    static_configs:
+      - targets: ['host.docker.internal:3000']
+
+  - job_name: 'reactClone'
+    metrics_path: /health.html
+    scrape_interval: 2s
+    static_configs:
+      - targets: ['host.docker.internal:81']
+
+  - job_name: 'services' # This service doesn't exist this will always be down
+    static_configs:
+      - targets:
+          - 'idonotexists:564'
