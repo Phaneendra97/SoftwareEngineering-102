@@ -17,12 +17,13 @@ const logger = winston.createLogger({
 exports.get_course_list_by_dept = function (req, res) {
   logger.info("Get Course list By Dept function");
   if (req.user) {
+    const userEmail = req.user["email"];
     const { dept } = req.query;
     courseList
       .find({ dept: dept })
       .then((courses) => {
         if (courses != null) {
-          logger.info("Get Course list By Dept API success");
+          logger.info("Get Course list By Dept API success", req.user);
           response = {
             courseList: courses,
             status: "success",
@@ -31,7 +32,8 @@ exports.get_course_list_by_dept = function (req, res) {
         } else {
           logger.error(
             "Get Course list By Dept API failed ",
-            "no records found"
+            "no records found",
+            req.user
           );
           res.status(500);
           return res.json({
@@ -41,7 +43,7 @@ exports.get_course_list_by_dept = function (req, res) {
         }
       })
       .catch((error) => {
-        logger.error("Get Course list By Dept API failed ", error);
+        logger.error("Get Course list By Dept API failed ", error, req.user);
         return res.json(error);
       });
   } else {

@@ -20,14 +20,14 @@ exports.get_review = function (req, res) {
       .find({ dept: dept, code: coursecode })
       .then((reviews) => {
         if (reviews != null) {
-          logger.info("Get reviews list function API function");
+          logger.info("Get reviews list function API function", req.user);
           response = {
             reviews: reviews,
             status: "success",
           };
           return res.json(response);
         } else {
-          logger.info("Get reviews list function API falied, no reviews exist");
+          logger.info("Get reviews list function API falied, no reviews exist", req.user);
           res.status(500);
           return res.json({
             status: "error",
@@ -36,7 +36,7 @@ exports.get_review = function (req, res) {
         }
       })
       .catch((error) => {
-        logger.info("Get reviews list function API error", error);
+        logger.info("Get reviews list function API error", error, req.user);
         return res.json(error);
       });
   } else {
@@ -65,7 +65,7 @@ exports.check_review_exists = function (req, res) {
           userReview: null,
         };
         if (reviewObject != null) {
-          logger.info("check if review exists function API, review found");
+          logger.info("check if review exists function API, review found", req.user);
           let reviews = reviewObject.reviews;
           for (i = 0; i < reviews.length; i++) {
             if (reviews[i].reviewerId == req.user._id) {
@@ -79,7 +79,7 @@ exports.check_review_exists = function (req, res) {
           };
           return res.json(response);
         } else {
-          logger.info("check if review exists function API, review not found");
+          logger.info("check if review exists function API, review not found", req.user);
           res.status(500);
           return res.json({
             status: "error",
@@ -108,7 +108,7 @@ exports.add_review = function (req, res) {
         instructor: reqPayload.instructor,
       })
       .then((reviewObject) => {
-        logger.info("check if review exists function");
+        logger.info("check if review exists function", req.user);
         if (reviewObject != null) {
           let newPayload = reviewObject;
           reviewPayload = {
@@ -174,7 +174,7 @@ exports.add_review = function (req, res) {
         }
       })
       .catch((error) => {
-        logger.error("add review failed ", error);
+        logger.error("add review failed ", error, req.user);
         return res.json(error);
       });
   } else {

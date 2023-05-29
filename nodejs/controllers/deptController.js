@@ -20,7 +20,7 @@ exports.get_dept_list = function (req, res) {
       .find()
       .then((depts) => {
         if (depts != null) {
-          logger.info("Get dept list API success");
+          logger.info("Get dept list API success", req.user);
 
           response = {
             deptList: depts,
@@ -28,7 +28,7 @@ exports.get_dept_list = function (req, res) {
           };
           return res.json(response);
         } else {
-          logger.info("Get dept list API failed No records exist");
+          logger.info("Get dept list API failed No records exist", req.user);
 
           res.status(500);
           return res.json({
@@ -38,7 +38,7 @@ exports.get_dept_list = function (req, res) {
         }
       })
       .catch((error) => {
-        logger.error("Get dept list API error ", error);
+        logger.error("Get dept list API error ", error, req.user);
 
         return res.json(error);
       });
